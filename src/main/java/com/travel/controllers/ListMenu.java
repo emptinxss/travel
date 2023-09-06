@@ -1,29 +1,31 @@
-package com.travel;
+package com.travel.controllers;
 
+
+import com.travel.model.Reservations;
+import com.travel.model.Users;
 import com.travel.utils.SystemOut;
 
 import java.util.Scanner;
 
-public class Liste {
+public class ListMenu {
 
     public static void getList(Scanner scanner){
-//        Scanner scanner = new Scanner(System.in);
+
         int number = 0;
 
         do {
-            System.out.println("#############################################################");
+            System.out.println("-------------------------- LIST MENU ---------------------------");
             System.out.printf("%-10s | %-50s \n", "Comando","Descrizione");
-            System.out.println("-------------------------------------------------------------");
+            System.out.println("----------------------------------------------------------------");
             System.out.printf("%-10s | %-50s \n", "1","Visualizzare gli utenti all'interno del sistema");
             System.out.printf("%-10s | %-50s \n", "2","Visualizzare le prenotazioni all'interno del sistema");
             System.out.printf("%-10s | %-50s \n", "0","Torna indietro");
-            System.out.println("#############################################################");
+            System.out.println("----------------------------------------------------------------");
 
             number = checkCommandList(scanner, number);
 
         } while (number != 0);
 
-//        scanner.close();
     }
 
     private static int checkCommandList(Scanner scanner, int number){
@@ -34,10 +36,10 @@ public class Liste {
                 case 0:
                     break;
                 case 1:
-                    CSVUtenti.printUsers();
+                    Users.printAll();
                     break;
                 case 2:
-                    CSVPrenotazioni.printReservations();
+                    Reservations.printAll();
                     break;
             }
         }  else {

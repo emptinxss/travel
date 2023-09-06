@@ -1,4 +1,4 @@
-package com.travel;
+package com.travel.services;
 
 import com.travel.constants.GlobalConst;
 import com.travel.utils.SystemOut;

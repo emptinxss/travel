@@ -1,6 +1,16 @@
-package com.travel;
+package com.travel.model;
 
+
+import com.travel.utils.SystemOut;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.travel.constants.GlobalConst.CSV_FILENAME_VIAGGI;
 
 public class Travels {
 
@@ -61,16 +71,57 @@ public class Travels {
         return available;
     }
 
-//FUNCTION
-
+    //FUNCTION
     public Travels getTravelsById(String targetId) {
-        List<Travels> travelsList = CSVViaggi.getAllTravels();
+        List<Travels> travelsList = getAll();
         for (Travels travels : travelsList) {
             if (travels.getId().equals(targetId)) {
                 return travels;
             }
         }
-        SystemOut.error("ID non valido.");
         return null;
+    }
+
+    public static List<Travels> getAll() {
+        List<Travels> travelsList = new ArrayList<>();
+
+        try (FileReader fileReader = new FileReader(CSV_FILENAME_VIAGGI);
+             CSVParser csvParser = CSVFormat.DEFAULT
+                     .withDelimiter(';')
+                     .withHeader("ID", "Data", "Durata (ore)", "Partenza", "Arrivo", "Disponibile").parse(fileReader)) {
+
+            csvParser.iterator().next();
+
+            for (CSVRecord record : csvParser) {
+
+                Travels travels = new Travels();
+
+                travels.setId(record.get("ID"));
+                travels.setDate(record.get("Data"));
+                travels.setDuration(record.get("Durata (ore)"));
+                travels.setDeparture(record.get("Partenza"));
+                travels.setArrival(record.get("Arrivo"));
+                travels.setAvailable(record.get("Disponibile"));
+
+                travelsList.add(travels);
+            }
+        } catch (Exception e) {
+            SystemOut.error("Errore nella letture dei viaggi.");
+        }
+
+        return travelsList;
+    }
+
+    public static void printAll(){
+        List<Travels> travelsList = getAll();
+
+        System.out.printf("%-2s | %-20s | %-20s | %-15s | %-25s | %s\n",
+                "ID","Data","Durata (ore)","Partenza","Arrivo","Disponibile");
+        System.out.println("----------------------------------------------------------------------------------------------------------------");
+
+        for (Travels travel : travelsList) {
+            System.out.printf("%-2s | %-20s | %-20s | %-15s | %-25s | %s\n",
+                    travel.getId(), travel.getDate(), travel.getDuration(), travel.getDeparture(), travel.getArrival(), travel.getAvailable());
+        }
     }
 }

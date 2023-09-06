@@ -1,4 +1,6 @@
-package com.travel;
+package com.travel.utils;
+
+import com.travel.constants.GlobalConst;
 
 public class SystemOut {
 
@@ -11,10 +13,10 @@ public class SystemOut {
     public static void error(String message){
         printMessage(GlobalConst.COLOR_RED,message);
     }
-    static void success(String message){
+    public static void success(String message){
         printMessage(GlobalConst.COLOR_GREEN,message);
     }
-    static void warning(String message){
+    public static void warning(String message){
         printMessage(GlobalConst.COLOR_YELLOW,message);
     }
 }

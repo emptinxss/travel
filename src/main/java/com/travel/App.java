@@ -1,11 +1,11 @@
-package org.travel;
+package com.travel;
 
-import java.util.Scanner;
+import com.travel.controllers.MainMenu;
 
 public class App
 {
     public static void main(String[] args) {
-        System.out.println( "WELCOME TO TO THE TRIPIFY!" );
+        System.out.println( "WELCOME TO TRIPIFY!" );
         MainMenu.start();
     }
 }

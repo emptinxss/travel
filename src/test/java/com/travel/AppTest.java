@@ -1,4 +1,4 @@
-package org.travel;
+package com.travel;
 
 import static org.junit.Assert.assertTrue;
 

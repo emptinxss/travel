@@ -1,54 +1,47 @@
-package com.travel;
+package com.travel.services;
 
+import com.travel.constants.GlobalConst;
 import com.travel.model.Users;
 import com.travel.utils.SystemOut;
+import com.travel.utils.Validation;
 
 import java.util.Scanner;
 
+
 public class UserLogin {
-    private static String userId;
+
     public static void getIdUser(int type, String message) {
+
         Scanner scanner = new Scanner(System.in);
+        String userId = null;
 
-        System.out.println(message);
-        userId = inputNumberValida(scanner, "l'ID:");
+        boolean userExists = false;
 
-        boolean exist = checkExist(userId);
+        SystemOut.question(message);
 
-        if(exist) {
-            if(type == 2) {
-                Prenotare.prenota(userId);
-            }else {
-                Disdire.cancelReservation(userId);
+        while (!userExists) {
+            userId = Validation.inputNumberValida(scanner);
+            userExists = checkUserExist(userId);
+
+            if (!userExists) {
+                SystemOut.warning("L'utente non esiste. Provare con un altro ID.");
             }
+        }
+
+        if (type == GlobalConst.BOOKING_TRAVEL_TYPE) {
+            Booking.bookTravel(userId);
         } else {
-            getIdUser(type, message);
+            Cancellation.cancelReservation(userId);
         }
     }
-    private static boolean checkExist(String userId){
+    private static boolean checkUserExist(String userId){
         Users users = new Users();
-
         Users user = users.getUserById(userId);
 
         if(user != null){
             return true;
-        } else {
-            System.out.println("L'utente non esiste. Provare con un'altro ID");
         }
+
         return false;
     }
-    private static String inputNumberValida(Scanner scanner, String message) {
-        String input = scanner.nextLine();
-        if (isNumeroInterPositivo(input)) {
-            return input;
-        } else {
-            SystemOut.warning("Inserimento non valido. Inserisci di nuovo " + message );
-            return inputNumberValida(scanner, message);
-        }
-    }
-
-    private static boolean isNumeroInterPositivo(String id) {
-        return id.matches("\\d+");
-    }
-
 }

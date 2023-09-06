@@ -1,14 +1,13 @@
-package com.travel;
+package com.travel.services;
+
+import com.travel.constants.GlobalConst;
 
 import com.travel.model.Travels;
 import com.travel.utils.SystemOut;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVRecord;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,63 +18,51 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.travel.constants.GlobalConst.DELIMITER;
+
 public class ExportTravels {
-    private static final String currentDir = System.getProperty("user.dir");
-    static final String CSV_FILENAME = currentDir + "\\src\\main\\data\\viaggi.csv";
 
-    public static void getFilteredTravelsList() {
-
-        List<Travels> travelsList = new ArrayList<>();
-
-        try (FileReader fileReader = new FileReader(CSV_FILENAME);
-             CSVParser csvParser = CSVFormat.DEFAULT.withDelimiter(';').withHeader("ID", "Data", "Durata (ore)", "Partenza", "Arrivo", "Disponibile").parse(fileReader)) {
-
-            // Salta la prima riga (intestazione delle colonne)
-            csvParser.iterator().next();
-
-            for (CSVRecord record : csvParser) {
-                String id = record.get("ID");
-                String date = record.get("Data");
-                String duration = record.get("Durata (ore)");
-                String departure = record.get("Partenza");
-                String arrival = record.get("Arrivo");
-                String available = record.get("Disponibile");
-
-                // Verifica se la colonna "Disponibile" è uguale a "SI"
-                if (available.equals("SI")) {
-                    // Creiamo un oggetto Users e aggiungiamolo alla lista userList
-                    Travels travels = new Travels();
-                    travels.setId(id);
-                    travels.setDate(date);
-                    travels.setDuration(duration);
-                    travels.setDeparture(departure);
-                    travels.setArrival(arrival);
-                    travels.setAvailable(available);
-
-                    travelsList.add(travels);
-                }
-            }
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
+    public static void getFilterList(){
+        List<Travels> filteredList = getFilteredTravels();
         LocalDate oggi = LocalDate.now();
 
-        // Formatta la data in una stringa se necessario
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy"); // Puoi personalizzare il formato
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String dataFormattata = oggi.format(formatter);
 
-        String outputFilePath = "viaggi-"+dataFormattata+".csv"; // Sostituisci con il percorso desiderato per il file di output
+        String outputFilePath = "viaggi-"+dataFormattata+".csv";
 
-        createCSV(travelsList, outputFilePath);
+        createCSV(filteredList, outputFilePath);
+    }
+
+    private static List<Travels> getFilteredTravels() {
+        List<Travels> filteredList = new ArrayList<>();
+
+        List<Travels> allTravels = Travels.getAll();
+        for (Travels travel : allTravels){
+            String available = travel.getAvailable();
+
+            if(available.equals(GlobalConst.AVAIABLE)){
+                Travels travels = new Travels();
+                travels.setId(travel.getId());
+                travels.setDate(travel.getDate());
+                travels.setDuration(travel.getDuration());
+                travels.setDeparture(travel.getDeparture());
+                travels.setArrival(travel.getArrival());
+                travels.setAvailable(available);
+
+                filteredList.add(travels);
+            }
+        }
+        return filteredList;
     }
 
     private static void createCSV(List<Travels> filteredTravelsList, String outputFilePath) {
         try (FileWriter fileWriter = new FileWriter(outputFilePath);
-             CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader("ID", "Data", "Durata (ore)", "Partenza", "Arrivo", "Disponibile"))) {
+             CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader("ID"+ DELIMITER +"Data"+ DELIMITER + "Durata (ore)"+ DELIMITER + "Partenza"+ DELIMITER + "Arrivo"+ DELIMITER + "Disponibile"))) {
 
             for (Travels travel : filteredTravelsList) {
-                csvPrinter.printRecord(travel.getId(), travel.getDate(), travel.getDuration(), travel.getDeparture(), travel.getArrival(), travel.getAvailable());
+                csvPrinter.printRecord(travel.getId() + DELIMITER + travel.getDate() + DELIMITER + travel.getDuration()
+                        + DELIMITER + travel.getDeparture() + DELIMITER + travel.getArrival() + DELIMITER + travel.getAvailable());
             }
             csvPrinter.flush();
         } catch (IOException e) {
@@ -86,10 +73,8 @@ public class ExportTravels {
     }
 
     private static void downloadCSV(String sourceFilePath) {
-        String userHomeFolder = System.getProperty("user.home"); // Ottiene la cartella home dell'utente
-        String downloadsFolder = userHomeFolder + File.separator + "Downloads"; // Componi il percorso completo della cartella "Downloads"
         File sourceFile = new File(sourceFilePath);
-        File destinationFolder = new File(downloadsFolder);
+        File destinationFolder = new File(GlobalConst.USER_DOWNLOADS_PATH);
 
         try {
             if (!destinationFolder.exists()) {
@@ -99,7 +84,7 @@ public class ExportTravels {
             Path sourcePath = sourceFile.toPath();
             Path destinationPath = new File(destinationFolder, sourceFile.getName()).toPath();
 
-            Files.copy(sourcePath, destinationPath, StandardCopyOption.COPY_ATTRIBUTES);
+            Files.move(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
 
             SystemOut.success("File scaricato con successo in: " + destinationPath);
         } catch (IOException e) {

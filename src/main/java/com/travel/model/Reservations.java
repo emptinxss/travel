@@ -1,19 +1,22 @@
-package com.travel;
+package com.travel.model;
 
 
+import com.travel.utils.SystemOut;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.travel.constants.GlobalConst.CSV_FILENAME_PRENOTAZIONI;
 
 public class Reservations {
 
-//    private List<Reservations> reservationsList;
     private String id;
     private String idTravel;
     private String idUser;
-
-
-//    public Reservations() {
-//        reservationsList = new ArrayList<>();
-//    }
 
     // SETTER
     public void setId(String id) {
@@ -42,24 +45,55 @@ public class Reservations {
         return idUser;
     }
 
-//    public List<Reservations> getReservationList() {
-//        return reservationsList;
-//    }
-
-    //FUNCTION
-//    public void addReservation(Reservations reservation) {
-//        reservationsList.add(reservation);
-//    }
-
-    public Reservations getReservationById(String targetId) {
-        List<Reservations> reservationsList = CSVPrenotazioni.getAllReservations();
+    //FUNCTIONS
+    public Reservations getReservationByUserId(String userId) {
+        List<Reservations> reservationsList = getAll();
         for (Reservations reservation : reservationsList) {
-            if (reservation.getId().equals(targetId)) {
+            if (reservation.getIdUser().equals(userId)) {
                 return reservation;
             }
         }
-        SystemOut.error("ID non valido.");
         return null;
+    }
+
+    public static List<Reservations> getAll() {
+
+        List<Reservations> reservationList = new ArrayList<>();
+
+        try (FileReader fileReader = new FileReader(CSV_FILENAME_PRENOTAZIONI);
+             CSVParser csvParser = CSVFormat.DEFAULT
+                     .withDelimiter(';')
+                     .withHeader("ID", "ID Viaggio", "ID Utente").parse(fileReader)) {
+
+            csvParser.iterator().next();
+
+            for (CSVRecord record : csvParser) {
+                Reservations reservations = new Reservations();
+
+                reservations.setId(record.get("ID"));
+                reservations.setIdTravel(record.get("ID Viaggio"));
+                reservations.setIdUser(record.get("ID Utente"));
+
+                reservationList.add(reservations);
+            }
+        } catch (Exception e) {
+            SystemOut.error("Errore nella letture delle prenotazioni");
+        }
+
+        return reservationList;
+    }
+
+    public static void printAll(){
+        List<Reservations> reservationList = getAll();
+
+        System.out.printf("%-2s | %-10s | %-10s \n",
+                "ID","ID Viaggio","ID Utente");
+        System.out.println("----------------------------------------------------------------");
+
+        for (Reservations reservations : reservationList) {
+            System.out.printf("%-2s | %-10s | %-10s \n",
+                    reservations.getId(), reservations.getIdTravel(), reservations.getIdUser());
+        }
     }
 
 }

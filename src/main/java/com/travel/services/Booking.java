@@ -1,7 +1,5 @@
 package com.travel.services;
 
-import com.travel.data.CSVReservations;
-import com.travel.data.CSVTravels;
 import com.travel.constants.GlobalConst;
 import com.travel.model.Reservations;
 import com.travel.model.Travels;
@@ -16,26 +14,24 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-public class Prenotare {
-//    private static Reservations reservation= new Reservations();
-    private static Travels travels= new Travels();
-    private static Scanner scanner = new Scanner(System.in);
+public class Booking {
 
-    public static void prenota(String userId){
 
+
+    public static void bookTravel(String userId){
+        Travels travels= new Travels();
+        Scanner scanner = new Scanner(System.in);
         String travelId;
 
         SystemOut.question("Inserisci l'ID del viaggio che desideri prenotare: ");
         travelId = inputNumberValida(scanner,"l'ID del viaggio");
-//    System.out.println("\u001B[34mInserisci l'ID del viaggio che desideri prenotare:\u001B[0m");
-//        travelId = scanner.nextInt();
 
-        Travels travelsAviable =  travels.getTravelsById(String.valueOf(travelId));
+        Travels travelsAvailable =  travels.getTravelsById(travelId);
 
-        if (travelsAviable.getId() != null && travelsAviable.getAvailable().equals("SI")) {
+        if (travelsAvailable.getId() != null && travelsAvailable.getAvailable().equals("SI")) {
 
-            String travelID = travelsAviable.getId();
-            List<Reservations> allResevervation = CSVReservations.getAllReservations();
+            String travelID = travelsAvailable.getId();
+            List<Reservations> allResevervation = Reservations.getAll();
 
             addRow(travelID,allResevervation , userId);
         } else {
@@ -61,7 +57,7 @@ public class Prenotare {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        editViaggi(CSVTravels.getAllTravels(), travelId);
+        editViaggi(Travels.getAll(), travelId);
         SystemOut.success("Prenotazione avvenuta con successo.");
     }
 
@@ -106,22 +102,6 @@ public class Prenotare {
 
         return ultimoID;
     }
-
-//    public static int nextIntWithRetry(Scanner scanner, String message) {
-//        while (true) {
-//            try {
-////                System.out.print(message);
-//                SystemOut.question(message);
-//                String input = scanner.next();
-//                int value = Integer.parseInt(input);
-//                return value;
-//            } catch (NumberFormatException e) {
-//                SystemOut.error("Input non valido. Devi inserire un numero intero.");
-////                System.out.println("Input non valido. Devi inserire un numero intero.");
-//                scanner.nextLine(); // Consuma la nuova riga non valida nel buffer
-//            }
-//        }
-//    }
 
     private static String inputNumberValida(Scanner scanner, String message) {
         String input = scanner.nextLine();
