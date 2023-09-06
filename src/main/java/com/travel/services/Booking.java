@@ -1,5 +1,7 @@
-package com.travel;
+package com.travel.services;
 
+import com.travel.data.CSVReservations;
+import com.travel.data.CSVTravels;
 import com.travel.constants.GlobalConst;
 import com.travel.model.Reservations;
 import com.travel.model.Travels;
@@ -33,7 +35,7 @@ public class Prenotare {
         if (travelsAviable.getId() != null && travelsAviable.getAvailable().equals("SI")) {
 
             String travelID = travelsAviable.getId();
-            List<Reservations> allResevervation = CSVPrenotazioni.getAllReservations();
+            List<Reservations> allResevervation = CSVReservations.getAllReservations();
 
             addRow(travelID,allResevervation , userId);
         } else {
@@ -59,7 +61,7 @@ public class Prenotare {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        editViaggi(CSVViaggi.getAllTravels(), travelId);
+        editViaggi(CSVTravels.getAllTravels(), travelId);
         SystemOut.success("Prenotazione avvenuta con successo.");
     }
 

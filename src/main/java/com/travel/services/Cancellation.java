@@ -1,5 +1,7 @@
-package com.travel;
+package com.travel.services;
 
+import com.travel.data.CSVReservations;
+import com.travel.data.CSVTravels;
 import com.travel.constants.GlobalConst;
 import com.travel.model.Reservations;
 import com.travel.model.Travels;
@@ -30,7 +32,7 @@ public class Disdire {
         if (travelsAviable.getId() != null && travelsAviable.getAvailable().equals("NO")) {
 
             String travelID = travelsAviable.getId();
-            List<Reservations> allResevervation = CSVPrenotazioni.getAllReservations();
+            List<Reservations> allResevervation = CSVReservations.getAllReservations();
 
             deleteRow(travelID ,allResevervation, userId);
         } else {
@@ -52,7 +54,7 @@ public class Disdire {
         } catch (IOException e) {
             SystemOut.error("Errore: Impossibile modificare la prenotazione.");
         }
-        editViaggi(CSVViaggi.getAllTravels(), travelId);
+        editViaggi(CSVTravels.getAllTravels(), travelId);
     }
 
     private static void editViaggi(List<Travels> filteredTravelsList, String travelId) {
