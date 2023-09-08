@@ -1,8 +1,8 @@
 package com.travel.services;
 
 import com.travel.constants.GlobalConst;
-import com.travel.model.Users;
 import com.travel.utils.SystemOut;
+import com.travel.utils.Util;
 import com.travel.utils.Validation;
 
 import java.util.Scanner;
@@ -10,38 +10,31 @@ import java.util.Scanner;
 
 public class UserLogin {
 
-    public static void getIdUser(int type, String message) {
+    public static void getIdUser(String mode) {
 
         Scanner scanner = new Scanner(System.in);
-        String userId = null;
 
+        String userId = null;
         boolean userExists = false;
 
-        SystemOut.question(message);
+        SystemOut.question("Inserisci l'ID dell'utente con cui vuoi " + mode + " il viaggio:");
 
         while (!userExists) {
             userId = Validation.inputNumberValida(scanner);
-            userExists = checkUserExist(userId);
+            userExists = Util.checkUserExist(userId);
 
             if (!userExists) {
                 SystemOut.warning("L'utente non esiste. Provare con un altro ID.");
             }
         }
 
-        if (type == GlobalConst.BOOKING_TRAVEL_TYPE) {
+        if (mode.equals(GlobalConst.BOOKING)) {
             Booking.bookTravel(userId);
-        } else {
+        } else if (mode.equals(GlobalConst.CANCELLATION)) {
             Cancellation.cancelReservation(userId);
         }
-    }
-    private static boolean checkUserExist(String userId){
-        Users users = new Users();
-        Users user = users.getUserById(userId);
 
-        if(user != null){
-            return true;
-        }
 
-        return false;
     }
+
 }

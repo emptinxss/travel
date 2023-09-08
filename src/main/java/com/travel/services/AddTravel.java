@@ -2,85 +2,52 @@ package com.travel.services;
 
 import com.travel.constants.GlobalConst;
 import com.travel.utils.SystemOut;
+import com.travel.utils.Util;
+import com.travel.utils.Validation;
 
 import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Scanner;
 
+import static com.travel.constants.GlobalConst.DELIMITER;
+
 public class AddTravel {
-    private static String data;
-    private static String durata;
-    private static String partenza;
-    private static String arrivo;
-    private static String disponibile = "SI";
-    private static String viaggio;
-    private static int lastId;
 
 
     public static void inserisciDatiViaggio() {
         Scanner scanner = new Scanner(System.in);
 
+        String data;
+        String durata;
+        String partenza;
+        String arrivo;
+        String disponibile = GlobalConst.AVAIABLE;
+        String viaggio;
+        int lastId;
+
+
         SystemOut.question("Inserisci la data del viaggio nel formato dd/MM/yyyy:");
-        data = inputDataValida(scanner, "la data del viaggio:");
+        data = Validation.inputDataValida(scanner);
 
         SystemOut.question("Inserisci la durata del viaggio in ore:");
-        durata = scanner.nextLine();; //TODO FALLO COME NUMERO VALIDO
+        durata = Validation.inputNumberValida(scanner);
 
         SystemOut.question("Inserisci la città di partenza:");
-        partenza = inputStringaValida(scanner, "la città di partenza:");
+        partenza = Validation.inputStringaValida(scanner);
 
         SystemOut.question("Inserisci la città di arrivo:");
-        arrivo = inputStringaValida(scanner, "la città di arrivo:");
+        arrivo = Validation.inputStringaValida(scanner);
 
-        leggiUltimoID(GlobalConst.CSV_FILENAME_VIAGGI, ";");
+        lastId = Util.getLastId(GlobalConst.CSV_FILENAME_VIAGGI, DELIMITER);
 
-        viaggio = lastId + 1 + ";" + data + ";" + durata + ";" + partenza + ";" + arrivo +";" + disponibile;
+        viaggio = lastId  + DELIMITER + data + DELIMITER + durata + DELIMITER + partenza + DELIMITER + arrivo + DELIMITER + disponibile;
 
         addUser(viaggio);
     }
 
-    private static String inputDataValida(Scanner scanner, String message) {
-        String input = scanner.nextLine();
-        Date data = parseData(input);
-
-        if (data != null) {
-            return input;
-        } else {
-            SystemOut.warning("Inserimento non valido. Inserisci di nuovo " + message);
-            return inputDataValida(scanner, message);
-        }
-    }
-
-    private static Date parseData(String input) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        dateFormat.setLenient(false);
-
-        try {
-            return dateFormat.parse(input);
-        } catch (ParseException e) {
-            return null; // Restituisce null in caso di parsing fallito
-        }
-    }
-    private static String inputStringaValida(Scanner scanner, String message) {
-        String input = scanner.nextLine();
-        if (isString(input)) {
-            return input;
-        } else {
-            SystemOut.warning("Inserimento non valido. Inserisci correttamente " + message );
-            return inputStringaValida(scanner, message);
-        }
-    }
-
-    private static boolean isString(String str) {
-        return str.matches("[a-zA-Z ]+");
-    }
-
     private static void addUser(String viaggio) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(GlobalConst.CSV_FILENAME_VIAGGI, true))) {
-            if (fileHaContenuto(GlobalConst.CSV_FILENAME_VIAGGI)) {
-                writer.newLine(); // Aggiungi una nuova riga vuota prima dell'utente
+            if (Util.fileHasConent(GlobalConst.CSV_FILENAME_VIAGGI)) {
+                writer.newLine();
             }
             writer.write(viaggio);
             SystemOut.success("Viaggio aggiunto correttamente.");
@@ -89,34 +56,4 @@ public class AddTravel {
         }
     }
 
-    private static boolean fileHaContenuto(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            return reader.readLine() != null;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    private static void leggiUltimoID(String filePath, String delimiter) {
-        int ultimoID = -1; // Inizializza con un valore negativo o un valore sensato per la tua logica
-
-        try (Scanner scanner = new Scanner(new File(filePath))) {
-            scanner.nextLine(); // Ignora la prima riga (intestazione)
-
-            while (scanner.hasNextLine()) {
-                String linea = scanner.nextLine();
-                String[] colonne = linea.split(delimiter);
-                if (colonne.length > 0) {
-                    int id = Integer.parseInt(colonne[0]); // Assumendo che l'ID sia nella prima colonna
-                    if (id > ultimoID) {
-                        ultimoID = id;
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            SystemOut.error("File non trovato: " + e.getMessage());
-        }
-
-        lastId = ultimoID;
-    }
 }

@@ -1,16 +1,18 @@
 package com.travel.model;
 
 
+import com.travel.constants.GlobalConst;
 import com.travel.utils.SystemOut;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.travel.constants.GlobalConst.CSV_FILENAME_UTENTI;
+import static com.travel.constants.GlobalConst.*;
 
 public class Users {
 
@@ -85,10 +87,11 @@ public class Users {
     public static List<Users> getAll() {
         List<Users> userList = new ArrayList<>();
 
-        try (FileReader fileReader = new FileReader(CSV_FILENAME_UTENTI);
-             CSVParser csvParser = CSVFormat.DEFAULT
-                     .withDelimiter(';')
-                     .withHeader("ID", "Nome", "Cognome", "Data di nascita", "Indirizzo", "Documento ID").parse(fileReader)) {
+        try (InputStream inputStream = Users.class.getClassLoader().getResourceAsStream(CSV_FILENAME_UTENTI);
+             InputStreamReader reader = new InputStreamReader(inputStream);
+             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+                     .withDelimiter(DELIMITER_CHAR)
+                     .withHeader(ID,NOME,COGNOME,DATA_DI_NASCITA,INDIRIZZO,DOCUMENTO_ID))) {
 
             csvParser.iterator().next();
 
@@ -105,7 +108,7 @@ public class Users {
                 userList.add(user);
             }
         } catch (Exception e) {
-            SystemOut.error("Errore nella leettura degli utenti.");
+            SystemOut.error("Errore nella lettura degli utenti.");
         }
 
         return userList;
@@ -114,13 +117,15 @@ public class Users {
     public static void printAll(){
         List<Users> userList = getAll();
 
-        System.out.printf("%-2s | %-20s | %-20s | %-15s | %-25s | %s\n",
-                "ID","Nome","Cognome","Data di nascita","Indirizzo","Documento ID");
-        System.out.println("----------------------------------------------------------------------------------------------------------------");
+        if(!userList.isEmpty()) {
+            System.out.println("                                                                                                                ");
+            System.out.printf("%-2s | %-20s | %-20s | %-15s | %-25s | %s\n", "ID", "Nome", "Cognome", "Data di nascita", "Indirizzo", "Documento ID");
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
 
-        for (Users user : userList) {
-            System.out.printf("%-2s | %-20s | %-20s | %-15s | %-25s | %s\n",
-                    user.getId(), user.getFirstName(), user.getLastName(), user.getBirthDate(), user.getAddress(), user.getDocumentId());
+            for (Users user : userList) {
+                System.out.printf("%-2s | %-20s | %-20s | %-15s | %-25s | %s\n",
+                        user.getId(), user.getFirstName(), user.getLastName(), user.getBirthDate(), user.getAddress(), user.getDocumentId());
+            }
         }
     }
 

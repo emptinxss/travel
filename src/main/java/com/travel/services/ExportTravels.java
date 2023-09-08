@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.travel.constants.GlobalConst.DELIMITER;
+import static com.travel.constants.GlobalConst.*;
 
 public class ExportTravels {
 
@@ -58,7 +58,7 @@ public class ExportTravels {
 
     private static void createCSV(List<Travels> filteredTravelsList, String outputFilePath) {
         try (FileWriter fileWriter = new FileWriter(outputFilePath);
-             CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader("ID"+ DELIMITER +"Data"+ DELIMITER + "Durata (ore)"+ DELIMITER + "Partenza"+ DELIMITER + "Arrivo"+ DELIMITER + "Disponibile"))) {
+             CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader(HEADER_VIAGGI))) {
 
             for (Travels travel : filteredTravelsList) {
                 csvPrinter.printRecord(travel.getId() + DELIMITER + travel.getDate() + DELIMITER + travel.getDuration()

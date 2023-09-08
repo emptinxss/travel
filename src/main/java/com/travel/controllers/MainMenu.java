@@ -8,6 +8,8 @@ import com.travel.services.AddUser;
 import com.travel.services.ExportTravels;
 import com.travel.services.UserLogin;
 import com.travel.utils.SystemOut;
+import com.travel.utils.Util;
+import com.travel.utils.Validation;
 
 import java.util.Scanner;
 
@@ -16,9 +18,10 @@ public class MainMenu {
     public static void start(){
 
         Scanner scanner = new Scanner(System.in);
-        int number = 0;
+        int number;
 
         do {
+            System.out.println("                                                                ");
             System.out.println("------------------------ MAIN MENU -----------------------------");
             System.out.printf("%-10s | %-50s \n", "Comando","Descrizione");
             System.out.println("----------------------------------------------------------------");
@@ -32,7 +35,7 @@ public class MainMenu {
             System.out.printf("%-10s | %-50s \n", "0","Uscire dal programma");
             System.out.println("----------------------------------------------------------------");
 
-             number = checkCommand(scanner, number);
+             number = checkCommand(scanner);
 
 
         } while (number != 0);
@@ -40,64 +43,48 @@ public class MainMenu {
         scanner.close();
 
     }
+    private static int checkCommand(Scanner scanner){
 
-    private static int checkCommand(Scanner scanner, int number){
+        int number = Integer.parseInt(Validation.inputNumberValida(scanner));
 
-        if (scanner.hasNextInt()) {
-            number = scanner.nextInt();
             switch (number) {
                 case 0:
-                    System.out.println(GlobalConst.ARRIVECERDI);
+                    System.out.println(GlobalConst.EXIT);
                     break;
                 case 1:
                     Travels.printAll();
+                    Util.waitInput(scanner);
                     break;
                 case 2:
-                    UserLogin.getIdUser(GlobalConst.BOOKING_TRAVEL_TYPE, "Inserisci l'ID dell'utente con cui vuoi fare la prenotazione");
+                    UserLogin.getIdUser(GlobalConst.BOOKING);
+                    Util.waitInput(scanner);
                     break;
                 case 3:
-                    UserLogin.getIdUser(GlobalConst.CANCELLATION_TRAVEL_TYPE,"Inserisci l'ID dell'utente con cui vuoi disdire la prenotazione");
+                    UserLogin.getIdUser(GlobalConst.CANCELLATION);
+                    Util.waitInput(scanner);
                     break;
                 case 4:
                     AddUser.inserisciDatiUtente();
+                    Util.waitInput(scanner);
                     break;
                 case 5:
                     AddTravel.inserisciDatiViaggio();
+                    Util.waitInput(scanner);
                     break;
                 case 6:
                     ExportTravels.getFilterList();
+                    Util.waitInput(scanner);
                     break;
                 case 7:
                     ListMenu.getList(scanner);
                     break;
                 default:
-                    SystemOut.error("Comando non valido.");
+                    SystemOut.error("Comando non esistente.");
+                    Util.waitInput(scanner);
                     break;
             }
-        }
-        else {
-            if(scanner.hasNextLine()) {
-                scanner.nextLine();
-            }
-           SystemOut.warning("Input non valido. Devi inserire un comando valido.");
-//            return number;
-            return checkCommand(scanner, number);
-        }
 
         return number;
     }
 
-    private static int nextIntWithRetry(Scanner scanner, String message) {
-        while (true) {
-            try {
-                SystemOut.question(message);
-                String input = scanner.next();
-                int value = Integer.parseInt(input);
-                return value;
-            } catch (NumberFormatException e) {
-                SystemOut.error("Input non valido. Devi inserire un numero intero.");
-                scanner.nextLine(); // Consuma la nuova riga non valida nel buffer
-            }
-        }
-    }
 }

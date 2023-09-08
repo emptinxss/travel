@@ -1,16 +1,16 @@
 package com.travel.model;
 
-
 import com.travel.utils.SystemOut;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.travel.constants.GlobalConst.CSV_FILENAME_VIAGGI;
+import static com.travel.constants.GlobalConst.*;
 
 public class Travels {
 
@@ -85,10 +85,11 @@ public class Travels {
     public static List<Travels> getAll() {
         List<Travels> travelsList = new ArrayList<>();
 
-        try (FileReader fileReader = new FileReader(CSV_FILENAME_VIAGGI);
-             CSVParser csvParser = CSVFormat.DEFAULT
-                     .withDelimiter(';')
-                     .withHeader("ID", "Data", "Durata (ore)", "Partenza", "Arrivo", "Disponibile").parse(fileReader)) {
+        try (InputStream inputStream = Travels.class.getClassLoader().getResourceAsStream(CSV_FILENAME_VIAGGI);
+             InputStreamReader reader = new InputStreamReader(inputStream);
+             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+                     .withDelimiter(DELIMITER_CHAR)
+                     .withHeader(ID,DATA,DURATA,PARTENZA,ARRIVO,DISPONIBILE))) {
 
             csvParser.iterator().next();
 
@@ -115,13 +116,15 @@ public class Travels {
     public static void printAll(){
         List<Travels> travelsList = getAll();
 
-        System.out.printf("%-2s | %-20s | %-20s | %-15s | %-25s | %s\n",
-                "ID","Data","Durata (ore)","Partenza","Arrivo","Disponibile");
-        System.out.println("----------------------------------------------------------------------------------------------------------------");
+        if(!travelsList.isEmpty()) {
+            System.out.println("                                                                                                                ");
+            System.out.printf("%-2s | %-20s | %-20s | %-15s | %-25s | %s\n", "ID", "Data", "Durata (ore)", "Partenza", "Arrivo", "Disponibile");
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
 
-        for (Travels travel : travelsList) {
-            System.out.printf("%-2s | %-20s | %-20s | %-15s | %-25s | %s\n",
-                    travel.getId(), travel.getDate(), travel.getDuration(), travel.getDeparture(), travel.getArrival(), travel.getAvailable());
+            for (Travels travel : travelsList) {
+                System.out.printf("%-2s | %-20s | %-20s | %-15s | %-25s | %s\n",
+                        travel.getId(), travel.getDate(), travel.getDuration(), travel.getDeparture(), travel.getArrival(), travel.getAvailable());
+            }
         }
     }
 }

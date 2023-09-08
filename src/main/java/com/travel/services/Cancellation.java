@@ -4,6 +4,7 @@ import com.travel.constants.GlobalConst;
 import com.travel.model.Reservations;
 import com.travel.model.Travels;
 import com.travel.utils.SystemOut;
+import com.travel.utils.Util;
 import com.travel.utils.Validation;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -13,11 +14,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-import static com.travel.constants.GlobalConst.DELIMITER;
+import static com.travel.constants.GlobalConst.*;
 
 public class Cancellation {
-
-    private static Travels travels= new Travels();
 
     public static void cancelReservation(String userId){
 
@@ -27,9 +26,8 @@ public class Cancellation {
         boolean travelExist = false;
         boolean reservationExist = false;
 
-
         while (!reservationExist) {
-            reservationExist = checkReservationExist(userId);
+            reservationExist = Util.checkReservationExist(userId);
 
             if (!reservationExist) {
                 SystemOut.warning("L'utente non ha effettuato nessuna prenotazione. Provare con un altro ID.");
@@ -41,36 +39,42 @@ public class Cancellation {
 
         while (!travelExist) {
             travelId = Validation.inputNumberValida(scanner);
-            travelExist = checkTravelExist(travelId);
+            travelExist = Util.checkTravelExist(travelId);
 
             if (!travelExist) {
                 SystemOut.warning("Il viggio non esiste. Provare con un altro ID.");
             }
         }
 
-        Travels travelsAviable =  travels.getTravelsById(travelId);
+        List<Reservations> allResevervation = Reservations.getAll();
 
-        if (travelsAviable.getId() != null && travelsAviable.getAvailable().equals(GlobalConst.NOT_AVAIABLE)) {
+        boolean cancellazioneEffettuata = false;
 
-            String travelID = travelsAviable.getId();
-            List<Reservations> allResevervation = Reservations.getAll();
+        for (Reservations reserv : allResevervation) {
+            String idUser = reserv.getIdUser();
+            String idTravel = reserv.getIdTravel();
 
-            deleteRow(travelID ,allResevervation, userId);
-        } else {
-            SystemOut.error("Nessun viaggio prenotato trovato con l'ID specificato.");
+            if (idUser.equals(userId) && idTravel.equals(travelId)) {
+                deleteReservation(travelId, allResevervation, userId);
+                cancellazioneEffettuata = true;
+                break;
+            }
+        }
+
+        if (!cancellazioneEffettuata) {
+            SystemOut.warning("Nessuna prenotazione trovata per l'utente e il viaggio specificato.");
         }
 
     }
 
-    private static void deleteRow(String travelId, List<Reservations> reservList, String userId){
+    private static void deleteReservation(String travelId, List<Reservations> reservList, String userId){
 
         try (FileWriter fileWriter = new FileWriter(GlobalConst.CSV_FILENAME_PRENOTAZIONI);
-             CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader("ID" + DELIMITER +  "ID Viaggio" + DELIMITER +  "ID Utente"))) {
+             CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader(HEADER_PRENOTAZIONI))) {
 
             for (Reservations reserv : reservList) {
-                if(!reserv.getIdTravel().equals(travelId) && !reserv.getIdUser().equals(userId)) {
+                if(!reserv.getIdTravel().equals(travelId) && reserv.getIdUser().equals(userId)) {
                     csvPrinter.printRecord(reserv.getId() + DELIMITER + reserv.getIdTravel() + DELIMITER + reserv.getIdUser());
-
                 }
             }
             SystemOut.success("Prenotazione disdetta.");
@@ -78,18 +82,18 @@ public class Cancellation {
             SystemOut.error("Errore: Impossibile cancellare la prenotazione.");
         }
 
-        editViaggi(Travels.getAll(), travelId);
+        setTravelAvaiable(Travels.getAll(), travelId);
     }
 
-    private static void editViaggi(List<Travels> filteredTravelsList, String travelId) {
+    private static void setTravelAvaiable(List<Travels> filteredTravelsList, String travelId) {
         try (FileWriter fileWriter = new FileWriter(GlobalConst.CSV_FILENAME_VIAGGI);
-             CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader("ID"+ DELIMITER + "Data"+ DELIMITER + "Durata (ore)"+ DELIMITER + "Partenza"+ DELIMITER +"Arrivo"+ DELIMITER + "Disponibile"))) {
+             CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader(HEADER_VIAGGI))) {
 
             for (Travels travel : filteredTravelsList) {
                 if(travel.getId().equals(travelId) && travel.getAvailable().equals(GlobalConst.NOT_AVAIABLE)){
                     travel.setAvailable(GlobalConst.AVAIABLE);
                 }
-                csvPrinter.printRecord(travel.getId() + ";" + travel.getDate() + ";" +travel.getDuration() + ";" +travel.getDeparture() + ";" +travel.getArrival() + ";" +travel.getAvailable());
+                csvPrinter.printRecord(travel.getId() + DELIMITER + travel.getDate() + DELIMITER +travel.getDuration() + DELIMITER +travel.getDeparture() + DELIMITER +travel.getArrival() + DELIMITER +travel.getAvailable());
             }
 
             csvPrinter.flush();
@@ -100,25 +104,4 @@ public class Cancellation {
         }
     }
 
-    private static boolean checkTravelExist(String travelId) {
-
-        Travels travel = travels.getTravelsById(travelId);
-
-        if(travel != null){
-            return true;
-        }
-
-        return false;
-    }
-    private static boolean checkReservationExist(String userId) {
-
-        Reservations reservations = new Reservations();
-        Reservations reserv = reservations.getReservationByUserId(userId);
-
-        if(reserv != null){
-            return true;
-        }
-
-        return false;
-    }
 }
