@@ -7,6 +7,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class Users {
     public static List<Users> getAll() {
         List<Users> userList = new ArrayList<>();
 
-        try (InputStream inputStream = Users.class.getClassLoader().getResourceAsStream(CSV_FILENAME_UTENTI);
+        try (InputStream inputStream = new FileInputStream(getCsvFilenameUtenti());
              InputStreamReader reader = new InputStreamReader(inputStream);
              CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
                      .withDelimiter(DELIMITER_CHAR)

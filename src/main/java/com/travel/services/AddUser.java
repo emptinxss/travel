@@ -38,7 +38,7 @@ public class AddUser {
         SystemOut.question("Inserisci un ID di un tuo documento");
         documentoId = scanner.nextLine();
 
-        lastId = Util.getLastId(GlobalConst.CSV_FILENAME_UTENTI, DELIMITER);
+        lastId = Util.getLastId(GlobalConst.getCsvFilenameUtenti(), DELIMITER);
 
         utente = lastId + DELIMITER + nome +DELIMITER + cognome + DELIMITER + data + DELIMITER + indirizzo + DELIMITER + documentoId;
 
@@ -46,8 +46,8 @@ public class AddUser {
     }
 
     public static void aggiungiUtente(String utente) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(GlobalConst.CSV_FILENAME_UTENTI, true))) {
-            if (Util.fileHasConent(GlobalConst.CSV_FILENAME_UTENTI)) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(GlobalConst.getCsvFilenameUtenti(), true))) {
+            if (Util.fileHasConent(GlobalConst.getCsvFilenameUtenti())) {
                 writer.newLine();
             }
             writer.write(utente);

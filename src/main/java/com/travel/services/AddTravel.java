@@ -37,7 +37,7 @@ public class AddTravel {
         SystemOut.question("Inserisci la città di arrivo:");
         arrivo = Validation.inputStringaValida(scanner);
 
-        lastId = Util.getLastId(GlobalConst.CSV_FILENAME_VIAGGI, DELIMITER);
+        lastId = Util.getLastId(GlobalConst.getCsvFilenameViaggi(), DELIMITER);
 
         viaggio = lastId  + DELIMITER + data + DELIMITER + durata + DELIMITER + partenza + DELIMITER + arrivo + DELIMITER + disponibile;
 
@@ -45,8 +45,8 @@ public class AddTravel {
     }
 
     private static void addUser(String viaggio) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(GlobalConst.CSV_FILENAME_VIAGGI, true))) {
-            if (Util.fileHasConent(GlobalConst.CSV_FILENAME_VIAGGI)) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(GlobalConst.getCsvFilenameViaggi(), true))) {
+            if (Util.fileHasConent(GlobalConst.getCsvFilenameViaggi())) {
                 writer.newLine();
             }
             writer.write(viaggio);

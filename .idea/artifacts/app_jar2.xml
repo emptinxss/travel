@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="app:jar2">
+    <output-path>$PROJECT_DIR$/out/artifacts/app_jar2</output-path>
+    <root id="root">
+      <element id="archive" name="app.jar">
+        <element id="module-output" name="app" />
+      </element>
+      <element id="library" level="project" name="Maven: org.apache.commons:commons-csv:1.8" />
+    </root>
+  </artifact>
+</component>

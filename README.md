@@ -1,4 +1,4 @@
-# VOCI
+# PoolingAround
 
 ## Table of contents
 
@@ -8,7 +8,7 @@
     -   [Built with](#built-with)
 -   [Getting started](#Getting-started)
     -   [Installation](#Installation)
--   [Usage](#Usage)
+    - [Build the jar file](#build-the-jar-file)
 -   [Links](#Links)
 -   [License](#License)
 
@@ -45,69 +45,53 @@ If you need to install [Git](https://git-scm.com/downloads).
     git clone https://github.com/emptinxss/travel.git
     ```
 
-2. Switch to the project folder:
+2. You can now open the project with you preferred IDE download the dependecies with maven 
+   and run the main class.
 
-    ```sh
-    cd app
-    ```
+### Build the jar file
+
+3. Before building the project you need to change the enviroment to "production".
+    You will find it in com.travel.constants.GlobalConst.java:
+
+   ```sh
+   private static final String ENVIROMENT = "production";
+   ```
+4. Make sure to be in the path of the project.
+   ```sh
+   cd travel
+   ```
+5. Then create the 
+   JAR file with you IDE feature or with Maven with the following command:
+
+   ```sh
+   mvn clean compile assembly:single
+   ```
+
 8. Switch to the jar folder:
 
    ```sh
-   cd path/to/app.jar
+   cd path/to/jar
    ```
    
+6. The JAR file name will be PoolingAround-1.0-jar-with-dependecies.jar. 
+    Rename the jar file to PoolingAround.jar
+
+7. You'll need to get the data folder and move it to the jar folder. You must have this structure: 
+
+    ```sh
+   |
+   |-data
+   |  |-viaggi.csv
+   |  |-prenotazioni.csv
+   |  |-utenti.csv
+   |-PoolingAround.jar
+    ```
+
 9. Run the jar file with the following command:
 
     ```sh
-    java -jar app.jar
+    java -jar PoolingAround.jar
     ```
-
-## Usage
-
-Raccomended tool to try the requests. [Postman](https://www.postman.com/)
-
-REST API endpoints:
-
-### Authors
-
--   **GET** /api/v1/authors
--   **GET** /api/v1/authors/{id}
--   **POST** /api/v1/authors
--   **PUT** /api/v1/authors/{id}
--   **PATCH** /api/v1/authors/{id}
--   **DELETE** /api/v1/authors/{id}
-
-### Media
-
--   **GET** /api/v1/media
--   **GET** /api/v1/media/{id}
--   **POST** /api/v1/media
--   **PUT** /api/v1/media/{id}
--   **PATCH** /api/v1/media/{id}
--   **DELETE** /api/v1/media/{id}
-
-> **Note**
-> For a succesful POST request you have to manually add the media file to path "public/uploads/media" and write the exact name of the file like the example below:
-
-![Immagine 2022-10-09 092537](https://user-images.githubusercontent.com/83363396/194754715-2de0c1e7-96ab-4f00-a654-759e680f1f8d.png)
-
-Make sure to select raw and JSON when performing POST PUT and PATCH request.
-
-EXTENSION SUPPORTED:
-
--   IMAGE: jpg|png|jpeg|gif
--   AUDIO: mp3|ogg|wav
--   VIDEO: mp4
-
-TROUBLESHOOTING:
-If you dont get the response automatically check on the headers tab if you get **Content/type** application/json.
-
-![Immagine 2022-10-09 093802](https://user-images.githubusercontent.com/83363396/194754726-fa020f35-0119-4319-b2e4-7bf4ba832c95.png)
-
-Alternatively, you can force it by adding a new header **Accept** application/json.
-
-![Immagine 2022-10-09 093918](https://user-images.githubusercontent.com/83363396/194754728-877d9ca6-9345-430e-83d1-b8da7b90b991.png)
-
 
 ## Links
 

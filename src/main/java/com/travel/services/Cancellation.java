@@ -69,7 +69,7 @@ public class Cancellation {
 
     private static void deleteReservation(String travelId, List<Reservations> reservList, String userId){
 
-        try (FileWriter fileWriter = new FileWriter(GlobalConst.CSV_FILENAME_PRENOTAZIONI);
+        try (FileWriter fileWriter = new FileWriter(GlobalConst.getCsvFilenamePrenotazioni());
              CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader(HEADER_PRENOTAZIONI))) {
 
             for (Reservations reserv : reservList) {
@@ -86,7 +86,7 @@ public class Cancellation {
     }
 
     private static void setTravelAvaiable(List<Travels> filteredTravelsList, String travelId) {
-        try (FileWriter fileWriter = new FileWriter(GlobalConst.CSV_FILENAME_VIAGGI);
+        try (FileWriter fileWriter = new FileWriter(GlobalConst.getCsvFilenameViaggi());
              CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader(HEADER_VIAGGI))) {
 
             for (Travels travel : filteredTravelsList) {

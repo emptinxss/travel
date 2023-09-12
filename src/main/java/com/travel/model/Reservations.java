@@ -59,7 +59,7 @@ public class Reservations {
 
         List<Reservations> reservationList = new ArrayList<>();
 
-        try (InputStream inputStream = Reservations.class.getClassLoader().getResourceAsStream(CSV_FILENAME_PRENOTAZIONI);
+        try (InputStream inputStream = new FileInputStream(getCsvFilenamePrenotazioni());
              InputStreamReader reader = new InputStreamReader(inputStream);
              CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
                      .withDelimiter(DELIMITER_CHAR)

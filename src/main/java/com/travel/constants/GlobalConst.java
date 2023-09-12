@@ -1,10 +1,13 @@
 package com.travel.constants;
 
 import java.io.File;
+import java.net.URISyntaxException;
 
-public class GlobalConst
+public abstract class GlobalConst
 
 {
+    private static final String ENVIROMENT = "production";
+
     public static final String OPEN_COLOR = "\u001B";
     public static final String CLOSE_COLOR = "\u001B[0m";
 
@@ -18,12 +21,9 @@ public class GlobalConst
 
     private static final String USER_DIR = System.getProperty("user.dir");
 
-    public static final String CSV_FILENAME_VIAGGI =   "..\\data\\viaggi.csv";
-    public static final String CSV_FILENAME_PRENOTAZIONI =   "..\\data\\prenotazioni.csv";
-    public static final String CSV_FILENAME_UTENTI = "..\\data\\utenti.csv";
-    public static final String CSV_VIAGGI_NEW = "csv\\viaggi.csv";
-    public static final String CSV_PRENOTAZIONI_NEW = "csv\\prenotazioni.csv";
-    public static final String CSV_UTENTI_NEW = "csv\\utenti.csv";
+    private static String CSV_FILENAME_VIAGGI;
+    private static String CSV_FILENAME_PRENOTAZIONI;
+    private static String CSV_FILENAME_UTENTI;
 
     private static final String USER_HOME_PATH = System.getProperty("user.home");
     public static final String USER_DOWNLOADS_PATH = USER_HOME_PATH + File.separator + "Downloads";
@@ -53,4 +53,43 @@ public class GlobalConst
     public static final String NOT_AVAIABLE = "NO";
 
     public static final String EXIT = "Chiusura del prgramma in corso...";
+
+    public static void setPaths(){
+        String jarPath;
+
+        try {
+            jarPath = GlobalConst.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+
+        File jarFile = new File(jarPath);
+        String jarDirectory = jarFile.getParent();
+
+        CSV_FILENAME_VIAGGI = jarDirectory + "\\data\\viaggi.csv";
+
+
+        if(ENVIROMENT.equals("development")){
+            CSV_FILENAME_VIAGGI = USER_DIR + "\\src\\main\\data\\viaggi.csv";
+            CSV_FILENAME_PRENOTAZIONI = USER_DIR + "\\src\\main\\data\\prenotazioni.csv" ;
+            CSV_FILENAME_UTENTI = USER_DIR + "\\src\\main\\data\\utenti.csv";
+        } else if (ENVIROMENT.equals("production")){
+            CSV_FILENAME_VIAGGI = jarDirectory + "\\data\\viaggi.csv";
+            CSV_FILENAME_PRENOTAZIONI = jarDirectory + "\\data\\prenotazioni.csv" ;
+            CSV_FILENAME_UTENTI = jarDirectory + "\\data\\utenti.csv";
+        }
+    }
+
+    public static String getCsvFilenameViaggi() {
+        return CSV_FILENAME_VIAGGI;
+    }
+
+    public static String getCsvFilenamePrenotazioni() {
+        return CSV_FILENAME_PRENOTAZIONI;
+    }
+
+    public static String getCsvFilenameUtenti() {
+        return CSV_FILENAME_UTENTI;
+    }
+
 }

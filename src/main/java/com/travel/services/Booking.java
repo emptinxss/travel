@@ -51,7 +51,7 @@ public class Booking {
 
     private static void addReservation(String travelId, List<Reservations> reservList, String userId){
 
-        try (FileWriter fileWriter = new FileWriter(CSV_FILENAME_PRENOTAZIONI);
+        try (FileWriter fileWriter = new FileWriter(getCsvFilenamePrenotazioni());
              CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT
                      .withHeader(HEADER_PRENOTAZIONI))) {
 
@@ -61,7 +61,7 @@ public class Booking {
             }
             csvPrinter.flush();
 
-            int newId = Util.getLastId(GlobalConst.CSV_FILENAME_PRENOTAZIONI,DELIMITER);
+            int newId = Util.getLastId(GlobalConst.getCsvFilenamePrenotazioni(),DELIMITER);
 
             csvPrinter.printRecord(newId+ DELIMITER +travelId+ DELIMITER +userId);
         } catch (IOException e) {
@@ -72,7 +72,7 @@ public class Booking {
     }
 
     private static void setTravelNotAvailable(List<Travels> filteredTravelsList, String travelId) {
-        try (FileWriter fileWriter = new FileWriter(CSV_FILENAME_VIAGGI);
+        try (FileWriter fileWriter = new FileWriter(getCsvFilenameViaggi());
              CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader(HEADER_VIAGGI))) {
 
             for (Travels travel : filteredTravelsList) {
