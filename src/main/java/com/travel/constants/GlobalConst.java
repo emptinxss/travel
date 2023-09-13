@@ -6,7 +6,7 @@ import java.net.URISyntaxException;
 public abstract class GlobalConst
 
 {
-    private static final String ENVIROMENT = "production";
+    private static final String ENVIROMENT = "development";
 
     public static final String OPEN_COLOR = "\u001B";
     public static final String CLOSE_COLOR = "\u001B[0m";
@@ -44,7 +44,7 @@ public abstract class GlobalConst
 
     public static final String HEADER_VIAGGI = ID + DELIMITER + DATA + DELIMITER + DURATA + DELIMITER + PARTENZA + DELIMITER + ARRIVO + DELIMITER + DISPONIBILE;
     public static final String HEADER_PRENOTAZIONI = ID + DELIMITER + ID_VIAGGIO + DELIMITER + ID_UTENTE;
-    public static final String HEADER_UTENTI = ID + DELIMITER + NOME + DELIMITER + COGNOME + DELIMITER + DATA_DI_NASCITA + DELIMITER + INDIRIZZO + DELIMITER + DOCUMENTO_ID;
+//    public static final String HEADER_UTENTI = ID + DELIMITER + NOME + DELIMITER + COGNOME + DELIMITER + DATA_DI_NASCITA + DELIMITER + INDIRIZZO + DELIMITER + DOCUMENTO_ID;
 
     public static final String BOOKING = "prenotare";
     public static final String CANCELLATION = "disdire";
