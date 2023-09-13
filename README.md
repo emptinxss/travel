@@ -29,11 +29,12 @@ Assuming all that, the main goal is to create a command line application to view
 
 -   [Maven](https://maven.apache.org/)
 -   [Intellij IDEA 2023 (IDE)](https://www.jetbrains.com/idea/)
+-   [JAVA 17](https://www.oracle.com/it/java/technologies/downloads/)
 
 
 ## Getting Started
 
-Follow these stepsto try the application in local. (RECOMMENDED)
+Follow these steps to try the application in local
 
 If you need to install [Git](https://git-scm.com/downloads).
 
@@ -56,27 +57,32 @@ If you need to install [Git](https://git-scm.com/downloads).
    ```sh
    private static final String ENVIROMENT = "production";
    ```
-4. Make sure to be in the path of the project.
+4. If you decide to make the jar without your IDE feature make sure to have maven installed in your machine
+   - [Download Maven](https://maven.apache.org/download.cgi)
+
+5. Make sure to be in the path of the project.
    ```sh
    cd travel
    ```
-5. Then create the 
+
+6. Then create the 
    JAR file with you IDE feature or with Maven with the following command:
 
    ```sh
    mvn clean compile assembly:single
    ```
 
-8. Switch to the jar folder:
+7. Switch to the jar folder:
 
    ```sh
-   cd path/to/jar
+   cd target
    ```
    
-6. The JAR file name will be PoolingAround-1.0-jar-with-dependecies.jar. 
+8. The JAR file name will be PoolingAround-1.0-jar-with-dependecies.jar. 
     Rename the jar file to PoolingAround.jar
 
-7. You'll need to get the data folder and move it to the jar folder. You must have this structure: 
+9. You'll need to get the data folder and move it to the jar folder. Feel free to move the jar file into another folder, 
+   but you must have this structure into it: 
 
     ```sh
    |
@@ -86,8 +92,7 @@ If you need to install [Git](https://git-scm.com/downloads).
    |  |-utenti.csv
    |-PoolingAround.jar
     ```
-
-9. Run the jar file with the following command:
+10. Run the jar file with the following command:
 
     ```sh
     java -jar PoolingAround.jar
