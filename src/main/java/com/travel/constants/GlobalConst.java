@@ -6,7 +6,7 @@ import java.net.URISyntaxException;
 public abstract class GlobalConst
 
 {
-    private static final String ENVIROMENT = "development";
+    private static final String ENVIROMENT = "production";
 
     public static final String OPEN_COLOR = "\u001B";
     public static final String CLOSE_COLOR = "\u001B[0m";
@@ -66,17 +66,17 @@ public abstract class GlobalConst
         File jarFile = new File(jarPath);
         String jarDirectory = jarFile.getParent();
 
-        CSV_FILENAME_VIAGGI = jarDirectory + "\\data\\viaggi.csv";
+        CSV_FILENAME_VIAGGI = jarDirectory +  File.separator + "data" +  File.separator + "viaggi.csv";
 
 
         if(ENVIROMENT.equals("development")){
-            CSV_FILENAME_VIAGGI = USER_DIR + "\\src\\main\\data\\viaggi.csv";
-            CSV_FILENAME_PRENOTAZIONI = USER_DIR + "\\src\\main\\data\\prenotazioni.csv" ;
-            CSV_FILENAME_UTENTI = USER_DIR + "\\src\\main\\data\\utenti.csv";
+            CSV_FILENAME_VIAGGI = USER_DIR +  File.separator + "src" +  File.separator + "main" +  File.separator + "data" +  File.separator + "viaggi.csv";
+            CSV_FILENAME_PRENOTAZIONI = USER_DIR + File.separator + "src" +  File.separator + "main" +  File.separator + "data" +  File.separator + "prenotazioni.csv" ;
+            CSV_FILENAME_UTENTI = USER_DIR + File.separator + "src" +  File.separator + "main" +  File.separator + "data" +  File.separator + "utenti.csv";
         } else if (ENVIROMENT.equals("production")){
-            CSV_FILENAME_VIAGGI = jarDirectory + "\\data\\viaggi.csv";
-            CSV_FILENAME_PRENOTAZIONI = jarDirectory + "\\data\\prenotazioni.csv" ;
-            CSV_FILENAME_UTENTI = jarDirectory + "\\data\\utenti.csv";
+            CSV_FILENAME_VIAGGI = jarDirectory +  File.separator + "data" +  File.separator + "viaggi.csv";
+            CSV_FILENAME_PRENOTAZIONI = jarDirectory +  File.separator + "data" +  File.separator + "prenotazioni.csv" ;
+            CSV_FILENAME_UTENTI = jarDirectory +  File.separator + "data" +  File.separator + "utenti.csv";
         }
     }
 
