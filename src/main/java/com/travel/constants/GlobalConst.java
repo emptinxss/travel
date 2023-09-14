@@ -6,7 +6,7 @@ import java.net.URISyntaxException;
 public abstract class GlobalConst
 
 {
-    private static final String ENVIROMENT = "production";
+    private static final String ENVIROMENT = "development";
 
     public static final String OPEN_COLOR = "\u001B";
     public static final String CLOSE_COLOR = "\u001B[0m";
