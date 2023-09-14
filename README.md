@@ -81,7 +81,7 @@ If you need to install [Git](https://git-scm.com/downloads).
 8. The JAR file name will be PoolingAround-1.0-jar-with-dependecies.jar. 
     Rename the jar file to PoolingAround.jar
 
-9. You'll need to get the data folder and move it to the jar folder. Feel free to move the jar file into another folder, 
+9. You'll need to get the data folder and move it into the jar folder. Feel free to move the jar file into another folder, 
    but you must have this structure into it: 
 
     ```sh
