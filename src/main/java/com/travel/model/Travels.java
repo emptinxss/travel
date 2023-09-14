@@ -108,7 +108,7 @@ public class Travels {
                 travelsList.add(travels);
             }
         } catch (Exception e) {
-            SystemOut.error("Errore nella letture dei viaggi.");
+            SystemOut.error("Errore nella lettura dei viaggi.");
         }
 
         return travelsList;
